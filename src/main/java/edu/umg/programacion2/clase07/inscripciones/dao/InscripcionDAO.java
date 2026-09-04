@@ -2,6 +2,7 @@ package edu.umg.programacion2.clase07.inscripciones.dao;
 
 import edu.umg.programacion2.clase07.inscripciones.modelo.Curso;
 import edu.umg.programacion2.clase07.inscripciones.modelo.Estudiante;
+import edu.umg.programacion2.clase07.inscripciones.modelo.Inscripcion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +31,7 @@ public class InscripcionDAO {
 
     private static final String URL = "jdbc:mysql://localhost:3306/prog2_db?useSSL=false&serverTimezone=UTC";
     private static final String USUARIO = "root";
-    private static final String PASSWORD = "tu_password_aqui";
+    private static final String PASSWORD = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "";
 
     /**
      * Inscribe a un estudiante en un curso. Retorna el id generado.
@@ -52,8 +54,26 @@ public class InscripcionDAO {
      *    vez de dejar que el error se propague sin explicacion.
      */
     public int inscribir(int estudianteId, int cursoId) throws SQLException {
-        // TODO: completar (ver pistas arriba). Recuerda el catch especifico
-        // para inscripciones duplicadas antes del catch general.
+    	 String sql = "INSERT INTO inscripciones (estudiante_id, curso_id) VALUES (?, ?)";
+
+         try (Connection conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
+              PreparedStatement statement = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+             statement.setInt(1, estudianteId);
+             statement.setInt(2, cursoId);
+             statement.executeUpdate();
+
+             try (ResultSet claves = statement.getGeneratedKeys()) {
+                 if (claves.next()) {
+                     return claves.getInt(1);
+                 }  
+             }
+         }catch(SQLIntegrityConstraintViolationException e) {
+        	 return -1; 
+         }catch(SQLException e) {
+        	 throw e;
+         }
+         
         return -1;
     }
 
