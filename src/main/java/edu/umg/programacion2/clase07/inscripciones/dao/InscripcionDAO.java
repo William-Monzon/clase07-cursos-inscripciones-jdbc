@@ -103,8 +103,7 @@ public class InscripcionDAO {
             
             int filasAfectadas = statement.executeUpdate();
             return filasAfectadas > 0;  
-        }
-        
+        }  
     }
 
     /**
@@ -127,10 +126,34 @@ public class InscripcionDAO {
      */
     public List<Curso> listarCursosDeEstudiante(String carnet) throws SQLException {
         List<Curso> resultado = new ArrayList<>();
-        // TODO: completar (ver pista del JOIN de 3 tablas arriba).
+        String sql = "SELECT c.id, c.nombre, c.creditos "
+        	     +      "FROM inscripciones i "
+        	     +      "JOIN cursos c ON i.curso_id = c.id "
+        	     +      "JOIN estudiantes e ON i.estudiante_id = e.id "
+        	     +      "WHERE e.carnet = ? ";
 
+              try (Connection conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
+                   PreparedStatement statement = conexion.prepareStatement(sql)){
+                    
+            	  statement.setString(1, carnet);
+            	  
+            	  try(ResultSet data = statement.executeQuery()){
+            		  while (data.next()) {
+                      resultado.add(mapearCurso(data));
+            		  }
+            	  }
+              }
         return resultado;
     }
+    
+    private Curso mapearCurso(ResultSet resultado) throws SQLException {
+        int id = resultado.getInt("id");
+        String nombre = resultado.getString("nombre");
+        int creditos = resultado.getInt("creditos");;
+        return new Curso(id, nombre, creditos);
+    }
+    
+
 
     /**
      * Lista los estudiantes inscritos en un curso, dado su nombre.
@@ -201,4 +224,4 @@ public class InscripcionDAO {
         // TODO: completar (ver pistas arriba).
         return Optional.empty();
     }
-}
+    }

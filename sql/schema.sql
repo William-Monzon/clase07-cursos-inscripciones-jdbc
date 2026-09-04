@@ -52,4 +52,13 @@ INSERT IGNORE INTO inscripciones (id, estudiante_id, curso_id, nota) VALUES
     (6, 4, 2, NULL);
 
 -- UPDATE: para actualizar la nota de una iscripción.
-UPDATE estudiantes SET nota = ? WHERE estudiante_id = ? AND curso_id;
+-- con el SET ingreso la nota y WHERE para indicar los el filtro que debe cumplir la fila.
+UPDATE estudiantes SET nota = 88 WHERE estudiante_id = 3 AND curso_id = 3;
+
+-- SELECT que devuelve los cursos de un estudiante, utilizando JOIN para unir tres tablas,
+-- filtrando el carnet para buscar el estudiante coincidente con el carnet.
+SELECT c.id, c.nombre, c.creditos 
+FROM inscripciones i 
+JOIN cursos c ON i.curso_id = c.id 
+JOIN estudiantes e ON i.estudiante_id = e.id 
+WHERE e.carnet = 2024001;
