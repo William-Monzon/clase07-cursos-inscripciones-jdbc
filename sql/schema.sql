@@ -50,3 +50,6 @@ INSERT IGNORE INTO inscripciones (id, estudiante_id, curso_id, nota) VALUES
     (4, 3, 1, 95.00),
     (5, 3, 3, NULL),
     (6, 4, 2, NULL);
+
+-- UPDATE: para actualizar la nota de una iscripción.
+UPDATE estudiantes SET nota = ? WHERE estudiante_id = ? AND curso_id;
