@@ -166,9 +166,31 @@ public class InscripcionDAO {
      */
     public List<Estudiante> listarEstudiantesDeCurso(String nombreCurso) throws SQLException {
         List<Estudiante> resultado = new ArrayList<>();
-        // TODO: completar.
+        String sql = "SELECT e.id, e.nombre, e.carnet "
+       	     +      "FROM inscripciones i "
+       	     +      "JOIN cursos c ON i.curso_id = c.id "
+       	     +      "JOIN estudiantes e ON i.estudiante_id = e.id "
+       	     +      "WHERE c.nombre = ? ";
+
+             try (Connection conexion = DriverManager.getConnection(URL, USUARIO, PASSWORD);
+                  PreparedStatement statement = conexion.prepareStatement(sql)){
+                   
+           	  statement.setString(1, nombreCurso);
+           	  
+           	  try(ResultSet data = statement.executeQuery()){
+           		  while (data.next()) {
+                     resultado.add(mapearEstudiante(data));
+           		  }
+           	  }
+             }
 
         return resultado;
+    }
+    private Estudiante mapearEstudiante(ResultSet resultado) throws SQLException {
+        int id = resultado.getInt("id");
+        String nombre = resultado.getString("nombre");
+        String carnet = resultado.getString("carnet");;
+        return new Estudiante(id, nombre, carnet);
     }
 
     /**

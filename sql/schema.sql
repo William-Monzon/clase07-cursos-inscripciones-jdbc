@@ -62,3 +62,12 @@ FROM inscripciones i
 JOIN cursos c ON i.curso_id = c.id 
 JOIN estudiantes e ON i.estudiante_id = e.id 
 WHERE e.carnet = 2024001;
+
+-- SELECT que devuelve los estudiantes que estan asignados a un curso
+-- JOIN para unir las 3 tablas, utilizando un alias para ingresar a cada tabla
+-- WHERE para buscar el los estudiantes por el nombre del curso asignado.
+SELECT e.id, e.nombre, e.carnet
+FROM inscripciones i
+JOIN cursos c ON i.curso_id = c.id
+JOIN estudiantes e ON i.estudiante_id = e.id
+WHERE c.nombre = 'Programacion 2';
