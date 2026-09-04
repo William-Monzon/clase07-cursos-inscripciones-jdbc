@@ -79,3 +79,15 @@ SELECT AVG(i.nota) AS promedio
 FROM inscripciones i
 JOIN estudiantes e ON i.estudiante_id = e.id
 WHERE e.carnet = 2024001;
+
+-- SELECT que devuelve el nombre del curso que tiene más estudiantes inscritos.
+-- GROUP BY agrupa según el nombre del curso
+-- COUNT cuentas la cantidad de estudiantes en cada grupo
+-- SE ordenan en forma descendente y con el LIMIT 1 se indica que devuelva solo la primera fila,
+-- en este caso solo el curso con mayor estudiantes.
+SELECT c.nombre, COUNT(*) AS total
+FROM inscripciones i
+JOIN cursos c ON i.curso_id = c.id
+GROUP BY c.nombre
+ORDER BY total DESC
+LIMIT 1;
