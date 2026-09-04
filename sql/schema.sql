@@ -71,3 +71,11 @@ FROM inscripciones i
 JOIN cursos c ON i.curso_id = c.id
 JOIN estudiantes e ON i.estudiante_id = e.id
 WHERE c.nombre = 'Programacion 2';
+
+-- SELECT para calcular el promedio de todos los cursos de un estudiante.
+-- AVG para calcular el promedio de la columna not, este ignora los null
+-- al resultado se le da el alias de promedio.
+SELECT AVG(i.nota) AS promedio
+FROM inscripciones i
+JOIN estudiantes e ON i.estudiante_id = e.id
+WHERE e.carnet = 2024001;
